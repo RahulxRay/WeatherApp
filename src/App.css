@@ -1,38 +1,121 @@
-.App {
-  text-align: center;
+/* Only truly custom values that Bootstrap utility classes cannot express */
+
+body {
+  background: #b8cfe8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ── Phone shell ── */
+.app-shell {
+  width: 393px;
+  height: 852px;
+  background: #eef3fa;
+  border-radius: 48px;
+  box-shadow: 0 0 0 10px #1a1a1a, 0 30px 80px rgba(0,0,0,0.45);
+}
+@media (max-height: 900px) { body { padding-top: 20px; } }
+@media (max-width: 430px) {
+  .app-shell { width: 100vw; height: 100dvh; border-radius: 0; box-shadow: none; }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+/* ── Search bar ── */
+.search-wrapper { background: #eef3fa; padding: 50px 20px 8px; }
+.content-area   { min-height: 0; scrollbar-width: none; padding: 6px 20px; }
+.content-area::-webkit-scrollbar { display: none; }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+.search-input { background: #fff !important; border: 1px solid #dce4ef !important; color: #1a2a3a !important; font-size: 0.88rem !important; }
+.search-input::placeholder { color: #8a9ab0 !important; }
+.search-input:focus { border-color: #6090d0 !important; box-shadow: 0 0 0 0.15rem rgba(96,144,208,0.18) !important; background: #fff !important; }
+.search-btn { background: #fff !important; border: 1px solid #dce4ef !important; color: #4a6080 !important; }
+.search-btn:hover { background: #f0f5ff !important; }
+.location-dropdown { background: #fff !important; border: 1px solid #dce4ef !important; border-top: none !important; border-radius: 0 0 12px 12px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.location-dropdown .btn { color: #2a3a4a !important; border: none !important; border-bottom: 1px solid #edf0f5 !important; border-radius: 0 !important; background: transparent !important; text-align: left; padding: 10px 16px; font-size: 0.85rem; }
+.location-dropdown .btn:hover { background: #f0f6ff !important; }
+.location-dropdown .btn:last-child { border-bottom: none !important; }
 
-.App-link {
-  color: #61dafb;
-}
+/* ── Warning banner ── */
+.warning-banner { background: #f5c800; box-shadow: 0 3px 10px rgba(200,160,0,0.25); }
+.warning-title  { color: #3a2800; letter-spacing: 0.4px; }
+.warning-sub    { color: #5a3e00; }
+.warning-icon svg { width: 26px; height: 26px; }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ── Metric cards ── */
+.metric-card {
+  border-radius: 18px;
+  aspect-ratio: 1;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
+.metric-card.clickable { cursor: pointer; }
+.metric-card.clickable:active  { transform: scale(0.97);       box-shadow: 0 1px 4px  rgba(0,0,0,0.10) !important; }
+.metric-card.clickable:hover   { transform: translateY(-2px);  box-shadow: 0 5px 16px rgba(0,0,0,0.12) !important; }
+
+.card-icon svg   { width: 24px; height: 24px; }
+.card-value      { font-size: clamp(1.8rem, 7vw, 2.3rem); color: #1a2a3a; line-height: 1.1; }
+.card-unit       { font-size: 0.8em; opacity: 0.75; margin-left: 1px; }
+.card-sublabel   { color: #4a5a6a; }
+.card-text-value { font-size: clamp(2rem, 8vw, 2.6rem); line-height: 1.1; }
+.card-arrow      { color: #3a2070; }
+.card-arrow svg  { width: 68px; height: 68px; fill: #3a2070; stroke: #3a2070; }
+.card-label      { color: #3a4a5a; opacity: 0.85; }
+
+/* ── Detail view ── */
+.back-btn { background: #cce0f8; color: #1a4a8a; transition: background 0.15s ease; }
+.back-btn:hover { background: #b5d0f0; }
+.chart-container { position: relative; height: 200px; }
+.detail-current-icon svg { width: 28px; height: 28px; }
+.daily-section-label { color: #6a7a8a; letter-spacing: 1.5px; }
+
+/* ── Daily forecast ── */
+.forecast-strip { scrollbar-width: thin; scrollbar-color: #b0c4d8 transparent; }
+.forecast-strip::-webkit-scrollbar { height: 4px; }
+.forecast-strip::-webkit-scrollbar-track { background: transparent; }
+.forecast-strip::-webkit-scrollbar-thumb { background: #b0c4d8; border-radius: 2px; }
+.forecast-day { flex: 0 0 auto; width: 72px; transition: transform 0.15s ease; }
+.forecast-day:hover  { transform: translateY(-2px); }
+.forecast-day.today  { background: #d4e8fc !important; }
+.forecast-day-label  { color: #6a7a8a; }
+.forecast-day-icon svg { width: 22px; height: 22px; }
+.forecast-day-temp   { color: #1a2a3a; }
+
+/* ── Bottom nav ── */
+.bottom-nav { background: #fff; box-shadow: 0 -2px 12px rgba(0,0,0,0.07); z-index: 20; }
+.nav-btn    { padding: 8px 6px 20px; transition: background 0.15s ease; }
+.nav-btn:hover { background: #f4f8ff; }
+.nav-icon   { color: #8a9ab0; width: 40px; height: 32px; border-radius: 10px; transition: background 0.15s ease, color 0.15s ease; }
+.nav-icon svg { width: 22px; height: 22px; }
+.nav-label  { font-size: 0.64rem; color: #8a9ab0; }
+.nav-btn.active .nav-icon  { background: #ddeeff; color: #2050a0; }
+.nav-btn.active .nav-label { color: #2050a0; font-weight: 700; }
+
+/* ── Stub pages ── */
+.stub-icon     { color: #8a9ab0; }
+.stub-icon svg { width: 56px; height: 56px; }
+
+/* ── Warnings page ── */
+.warning-dot      { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.warning-card-meta { color: #8a9ab0; }
+
+/* ── Settings ── */
+.settings-section-label { color: #8a9ab0; letter-spacing: 1.5px; }
+.settings-toggle {
+  width: 40px; height: 22px;
+  background: #2060d0;
+  border-radius: 11px;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.settings-toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  top: 3px; right: 3px;
+  transition: right 0.2s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.settings-toggle.off { background: #c8d0dc; }
+.settings-toggle.off::after { right: auto; left: 3px; }
