@@ -11,6 +11,36 @@ const Geocoding = (props) => {
 
     const [userLocation, setUserLocation] = useState(null);
 
+    // Recent locations — persisted in localStorage, capped at 3 entries.
+    // Each entry is the full location object returned by the geocoding API.
+    const [recentLocations, setRecentLocations] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('recentLocations') || '[]');
+        } catch {
+            return [];
+        }
+    });
+
+    // Adds a selected location to the front of the recent list, deduplicates by id,
+    // trims to 3, then saves back to localStorage.
+    const addToRecent = (loc) => {
+        setRecentLocations(prev => {
+            const filtered = prev.filter(r => r.id !== loc.id);
+            const updated = [loc, ...filtered].slice(0, 3);
+            localStorage.setItem('recentLocations', JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    // Removes a single location from the recent list by id.
+    const removeFromRecent = (id) => {
+        setRecentLocations(prev => {
+            const updated = prev.filter(r => r.id !== id);
+            localStorage.setItem('recentLocations', JSON.stringify(updated));
+            return updated;
+        });
+    };
+
     const fetchData = async () => {
         if (!location){return;}
         try{
@@ -48,10 +78,12 @@ const Geocoding = (props) => {
     };
 
     const handleClick = (index) => {
-        setPlaceholder(locationsArr[index].name + ", " + locationsArr[index].admin1 + ", " + locationsArr[index].country)
-        setLocation(locationsArr[index].name + ", " + locationsArr[index].admin1 + ", " + locationsArr[index].country);
-        setLocationData(locationsArr[index]);
-        props.sendData(locationsArr[index]);
+        const selected = locationsArr[index];
+        setPlaceholder(selected.name + ", " + selected.admin1 + ", " + selected.country)
+        setLocation(selected.name + ", " + selected.admin1 + ", " + selected.country);
+        setLocationData(selected);
+        props.sendData(selected);
+        addToRecent(selected); // save to recent list
         setLocationsArr(null);
         setInputFocused(false);
     };
@@ -142,6 +174,93 @@ const Geocoding = (props) => {
                     </>
                     )}
                 </div>
+
+                {/* Recent locations — shown when the recent list is populated and the dropdown isn't open */}
+                {recentLocations.length > 0 && !locationsArr && (
+                    <div className="mt-3 px-1">
+                        {/* "Recent" label */}
+                        <span style={{
+                            fontSize: "0.85rem",
+                            letterSpacing: "0.12em",
+                            textTransform: "uppercase",
+                            fontWeight: 800,
+                            color: props.darkMode ? "white" : "#333",
+                            background: props.darkMode ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.07)",
+                            padding: "3px 10px",
+                            borderRadius: "999px",
+                            display: "inline-block",
+                        }}>⏱ Recent</span>
+                        <div className="d-flex flex-wrap gap-2 mt-2">
+                            {recentLocations.map((loc, i) => {
+                                // Colours drawn from the app's blue-teal maritime palette
+                                const colours = props.darkMode
+                                    ? ["#2d6a9f", "#2d7a72", "#4a5494"]
+                                    : ["#5b9fc8", "#5aaea5", "#7988c0"];
+                                return (
+                                    <div
+                                        key={loc.id ?? i}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            borderRadius: "999px",
+                                            backgroundColor: colours[i],
+                                            boxShadow: "0 3px 10px rgba(0,0,0,0.22)",
+                                        }}
+                                    >
+                                        {/* Main pill button — selects the location */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPlaceholder(loc.name + ", " + loc.admin1 + ", " + loc.country);
+                                                setLocation(loc.name + ", " + loc.admin1 + ", " + loc.country);
+                                                setLocationData(loc);
+                                                props.sendData(loc);
+                                                addToRecent(loc);
+                                            }}
+                                            style={{
+                                                background: "none",
+                                                border: "none",
+                                                color: "white",
+                                                fontWeight: 700,
+                                                fontSize: "1rem",
+                                                padding: "10px 8px 10px 16px",
+                                                cursor: "pointer",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                        >
+                                            📍 {loc.name}, {loc.country}
+                                        </button>
+                                        {/* Circular X button — removes just this entry */}
+                                        <button
+                                            type="button"
+                                            onClick={(e) => { e.stopPropagation(); removeFromRecent(loc.id ?? loc.name); }}
+                                            style={{
+                                                width: 26,
+                                                height: 26,
+                                                borderRadius: "50%",
+                                                background: "rgba(0,0,0,0.25)",
+                                                border: "none",
+                                                color: "white",
+                                                fontWeight: 700,
+                                                fontSize: "0.75rem",
+                                                cursor: "pointer",
+                                                lineHeight: 1,
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                marginRight: 8,
+                                                flexShrink: 0,
+                                            }}
+                                            aria-label="Remove from recent"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
                 
             </form>
             }
