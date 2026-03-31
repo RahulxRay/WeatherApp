@@ -37,8 +37,6 @@ const AppInner = () => {
     const [weatherData, setWeatherData] = useState('');
     const [modalClick, setModalClick] = useState(null);
     const [DModeFlag, setDModeFlag] = useState(false);
-    const [WindUnitFlag, setWindUnitFlag] = useState(false);
-    const [BoatSizeFlag, setBoatSizeFlag] = useState(false);
     const [boatLength, setBoatLength] = useState('');
     const [freeboard, setFreeboard] = useState('');
     const { convertTemp, tempLabel, convertSpeed, speedLabel, convertHeight, heightLabel,
@@ -230,40 +228,26 @@ const AppInner = () => {
                                 <label className="form-check-label" htmlFor="DarkmodeSwitchCheck">Dark Mode</label>
                             </div>
                             <div>
-                                <h4>Wind Speed Units:</h4>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="WindUnitRadios" id="WindUnitRadios1" onClick={() => setWindUnitFlag(true)} defaultChecked></input>
-                                    <label className="form-check-label" htmlFor="WindUnitRadios1">
-                                        MPH
-                                    </label>
-                                </div>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="WindUnitRadios" id="WindUnitRadios2" onClick={() => setWindUnitFlag(false)}></input>
-                                    <label className="form-check-label" htmlFor="WindUnitRadios2">
-                                        Knots
-                                    </label>
-                                </div>
-                        
+                                <h4>Vessel Settings:</h4>
                                 <div>
-                                    <h4>Vessel Settings:</h4>
-                                    <div>
-                                        <p> Boat length: (metres)</p>
-                                        <input
-                                            type="number"
-                                            placeholder = "0"
-                                            value = {boatLength}
-                                            onChange={(e) => setBoatLength(e.target.value)}
-                                            />
-
-                                            <p>Freeboard Height: (metres)</p>
-                                            <input
-                                                type="number"
-                                                className="form-control"
-                                                placeholder="0"
-                                                value={freeboard}
-                                                onChange={(e) => setFreeboard(e.target.value)}
-                                            />
-                                    </div>
+                                    <p>Boat length: (metres)</p>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        style={DModeFlag ? {backgroundColor:'black', color:'white', borderColor:'#555'} : {}}
+                                        placeholder="0"
+                                        value={boatLength}
+                                        onChange={(e) => setBoatLength(e.target.value)}
+                                    />
+                                    <p className="mt-2">Freeboard Height: (metres)</p>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        style={DModeFlag ? {backgroundColor:'black', color:'white', borderColor:'#555'} : {}}
+                                        placeholder="0"
+                                        value={freeboard}
+                                        onChange={(e) => setFreeboard(e.target.value)}
+                                    />
                                 </div>
                             </div>
                             <div>
@@ -271,15 +255,23 @@ const AppInner = () => {
                                 <div className="mb-2">
                                     <label className="form-label fw-semibold">Temperature</label>
                                     <div className="btn-group d-block">
-                                        <button className={`btn btn-sm ${tempUnit==='C' ? 'btn-dark' : 'btn-outline-secondary'}`} onClick={() => setTempUnit('C')}>°C</button>
-                                        <button className={`btn btn-sm ${tempUnit==='F' ? 'btn-dark' : 'btn-outline-secondary'}`} onClick={() => setTempUnit('F')}>°F</button>
+                                        <button className={`btn btn-sm ${tempUnit==='C' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setTempUnit('C')}>°C</button>
+                                        <button className={`btn btn-sm ${tempUnit==='F' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setTempUnit('F')}>°F</button>
+                                    </div>
+                                </div>
+                                <div className="mb-2">
+                                    <label className="form-label fw-semibold">Wind Speed</label>
+                                    <div className="btn-group d-block">
+                                        <button className={`btn btn-sm ${speedUnit==='mph' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setSpeedUnit('mph')}>mph</button>
+                                        <button className={`btn btn-sm ${speedUnit==='kph' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setSpeedUnit('kph')}>kph</button>
+                                        <button className={`btn btn-sm ${speedUnit==='kts' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setSpeedUnit('kts')}>kts</button>
                                     </div>
                                 </div>
                                 <div className="mb-2">
                                     <label className="form-label fw-semibold">Height / Distance</label>
                                     <div className="btn-group d-block">
-                                        <button className={`btn btn-sm ${heightUnit==='m' ? 'btn-dark' : 'btn-outline-secondary'}`} onClick={() => setHeightUnit('m')}>m</button>
-                                        <button className={`btn btn-sm ${heightUnit==='ft' ? 'btn-dark' : 'btn-outline-secondary'}`} onClick={() => setHeightUnit('ft')}>ft</button>
+                                        <button className={`btn btn-sm ${heightUnit==='m' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setHeightUnit('m')}>m</button>
+                                        <button className={`btn btn-sm ${heightUnit==='ft' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => setHeightUnit('ft')}>ft</button>
                                     </div>
                                 </div>
                             </div>
@@ -316,11 +308,11 @@ const AppInner = () => {
                                 {/* Temperature card — clean, no sunrise bar */}
                                 <button
                                     onClick={() => setModalClick("Temperature")}
-                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor:"rgba(186,250,255,1)"}}
+                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor: DModeFlag ? "rgb(110,164,168)" : "rgba(186,250,255,1)"}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
-                                    <div className="row w-100 h-100 text-center align-items-center mx-auto p-0 row-cols-1">
+                                    <div className="row w-100 h-100 text-center align-items-center mx-auto p-0 row-cols-1" style={{color: DModeFlag ? "white" : "inherit"}}>
                                         <h1 className="col mx-auto fw-semibold">{weatherLookup[weatherData.forecast.current[8][1]].icon} {convertTemp(weatherData.forecast.current[2][1])}{tempLabel()}</h1>
                                         <h5 className="col mx-auto">Feels like: {convertTemp(weatherData.forecast.current[7][1])}{tempLabel()}</h5>
                                     </div>
@@ -345,29 +337,29 @@ const AppInner = () => {
                                 <button
                                     onClick={() => setModalClick("Wind Speed")}
                                     style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px",
-                                            backgroundColor: ["rgba(186,250,255,1)","rgba(204,255,186,1)","rgba(255,241,183,1)","rgba(255,185,164,1)"][safetyLookup("windSpeed", parseFloat(weatherData.forecast.current[4][1]))]}}
-                                    className="btn shadow-sm rounded-5 p-0"
-                                    type="button" data-bs-toggle="modal" data-bs-target="#fModal"
-                                >
-                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"1px",padding:"6px"}}>
-                                        <BeaufortGauge mph={parseFloat(weatherData.forecast.current[4][1])} size={86} />
-                                        <span style={{fontSize:"0.82rem",fontWeight:800,lineHeight:1}}>Bft {toBeaufort(parseFloat(weatherData.forecast.current[4][1]))}</span>
-                                        <span className="fw-bold" style={{fontSize:"0.85rem",lineHeight:1}}>{convertSpeed(weatherData.forecast.current[4][1])} {speedLabel()}</span>
-                                        <small style={{fontSize:"0.72rem",color:"rgba(0,0,0,0.55)"}}>Wind Speed</small>
-                                    </div>
-                                </button>
-
-                                {/* Wind Direction with compass + degrees */}
-                                <button
-                                    onClick={() => setModalClick("Wind Direction")}
-                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor:"rgba(186,250,255,1)"}}
+                                            backgroundColor: (DModeFlag ? ["rgb(110,164,168)","rgb(129,168,113)","rgb(181,166,115)","rgb(165,110,93)"] : ["rgba(186,250,255,1)","rgba(204,255,186,1)","rgba(255,241,183,1)","rgba(255,185,164,1)"])[safetyLookup("windSpeed", parseFloat(weatherData.forecast.current[4][1]))]}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
                                     <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px"}}>
+                                        <BeaufortGauge mph={parseFloat(weatherData.forecast.current[4][1])} size={86} />
+                                        <span style={{fontSize:"0.9rem",fontWeight:800,lineHeight:1,color: DModeFlag ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)"}}>Bft {toBeaufort(parseFloat(weatherData.forecast.current[4][1]))}</span>
+                                        <span style={{fontSize:"0.9rem",fontWeight:700,lineHeight:1,color: DModeFlag ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)"}}>{convertSpeed(weatherData.forecast.current[4][1])} {speedLabel()}</span>
+                                        <small style={{fontSize:"0.72rem",color: DModeFlag ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)"}}>Wind Speed</small>
+                                    </div>
+                                </button>
+
+                                {/* Wind Direction */}
+                                <button
+                                    onClick={() => setModalClick("Wind Direction")}
+                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor: DModeFlag ? "rgb(110,164,168)" : "rgba(186,250,255,1)"}}
+                                    className="btn shadow-sm rounded-5 p-0"
+                                    type="button" data-bs-toggle="modal" data-bs-target="#fModal"
+                                >
+                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px",color: DModeFlag ? "white" : "inherit"}}>
                                         <CompassRose degrees={weatherData.forecast.current[5][1]} size={76} />
-                                        <span className="fw-bold" style={{fontSize:"0.85rem",lineHeight:1}}>{weatherData.forecast.current[5][1]}°</span>
-                                        <small style={{fontSize:"0.72rem",color:"rgba(0,0,0,0.55)"}}>Wind Direction</small>
+                                        <span className="fw-bold" style={{fontSize:"1rem",lineHeight:1}}>{weatherData.forecast.current[5][1]}°</span>
+                                        <small style={{fontSize:"0.72rem",color: DModeFlag ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)"}}>Wind Direction</small>
                                     </div>
                                 </button>
 
@@ -375,15 +367,15 @@ const AppInner = () => {
                                 <button
                                     onClick={() => setModalClick("Wind Gusts")}
                                     style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px",
-                                            backgroundColor: ["rgba(186,250,255,1)","rgba(204,255,186,1)","rgba(255,241,183,1)","rgba(255,185,164,1)"][safetyLookup("windGust", parseFloat(weatherData.forecast.current[6][1]))]}}
+                                            backgroundColor: (DModeFlag ? ["rgb(110,164,168)","rgb(129,168,113)","rgb(181,166,115)","rgb(165,110,93)"] : ["rgba(186,250,255,1)","rgba(204,255,186,1)","rgba(255,241,183,1)","rgba(255,185,164,1)"])[safetyLookup("windGust", parseFloat(weatherData.forecast.current[6][1]))]}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
-                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"1px",padding:"6px"}}>
+                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px"}}>
                                         <BeaufortGauge mph={parseFloat(weatherData.forecast.current[6][1])} size={86} />
-                                        <span style={{fontSize:"0.82rem",fontWeight:800,lineHeight:1}}>Bft {toBeaufort(parseFloat(weatherData.forecast.current[6][1]))}</span>
-                                        <span className="fw-bold" style={{fontSize:"0.85rem",lineHeight:1}}>{convertSpeed(weatherData.forecast.current[6][1])} {speedLabel()}</span>
-                                        <small style={{fontSize:"0.72rem",color:"rgba(0,0,0,0.55)"}}>Wind Gusts</small>
+                                        <span style={{fontSize:"0.9rem",fontWeight:800,lineHeight:1,color: DModeFlag ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)"}}>Bft {toBeaufort(parseFloat(weatherData.forecast.current[6][1]))}</span>
+                                        <span style={{fontSize:"0.9rem",fontWeight:700,lineHeight:1,color: DModeFlag ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)"}}>{convertSpeed(weatherData.forecast.current[6][1])} {speedLabel()}</span>
+                                        <small style={{fontSize:"0.72rem",color: DModeFlag ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)"}}>Wind Gusts</small>
                                     </div>
                                 </button>
                                 </>
@@ -398,35 +390,35 @@ const AppInner = () => {
                                     click={() =>setModalClick("Wave Height")}
                                     darkMode={DModeFlag}
                                 />
-                                {/* Wave Direction with compass + degrees */}
+                                {/* Wave Direction */}
                                 <button
                                     onClick={() => setModalClick("Wave Direction")}
-                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor:"rgba(186,250,255,1)"}}
+                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor: DModeFlag ? "rgb(110,164,168)" : "rgba(186,250,255,1)"}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
-                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px"}}>
+                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px",color: DModeFlag ? "white" : "inherit"}}>
                                         <CompassRose degrees={weatherData.marine.current[3][1]} size={76} />
-                                        <span className="fw-bold" style={{fontSize:"0.85rem",lineHeight:1}}>{weatherData.marine.current[3][1]}°</span>
-                                        <small style={{fontSize:"0.72rem",color:"rgba(0,0,0,0.55)"}}>Wave Direction</small>
+                                        <span className="fw-bold" style={{fontSize:"1rem",lineHeight:1}}>{weatherData.marine.current[3][1]}°</span>
+                                        <small style={{fontSize:"0.72rem",color: DModeFlag ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)"}}>Wave Direction</small>
                                     </div>
                                 </button>
 
                                 {/* Sea Level Height with tide sparkline */}
                                 <button
                                     onClick={() => setModalClick("Sea Level Height")}
-                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor:"rgba(186,250,255,1)"}}
+                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor: DModeFlag ? "rgb(110,164,168)" : "rgba(186,250,255,1)"}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
-                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100 px-2">
+                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100 px-2" style={{color: DModeFlag ? "white" : "inherit"}}>
                                         <h1 className="fw-semibold mb-0">{convertHeight(weatherData.marine.current[4][1])}{heightLabel()}</h1>
-                                        <small className="mb-1">Sea Level Height</small>
                                         <TideSparkline
                                             values={weatherData.marine.hourly[2][1]}
                                             times={weatherData.marine.hourly[0][1]}
                                             size={{w:130, h:36}}
                                         />
+                                        <small>Sea Level Height</small>
                                     </div>
                                 </button>
 
@@ -439,17 +431,17 @@ const AppInner = () => {
                                     darkMode={DModeFlag}
                                 />
 
-                                {/* Swell Direction with compass + degrees */}
+                                {/* Swell Direction */}
                                 <button
                                     onClick={() => setModalClick("Swell Direction")}
-                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor:"rgba(186,250,255,1)"}}
+                                    style={{height:"40vw", width:"40vw", maxWidth:"180px", maxHeight:"180px", backgroundColor: DModeFlag ? "rgb(110,164,168)" : "rgba(186,250,255,1)"}}
                                     className="btn shadow-sm rounded-5 p-0"
                                     type="button" data-bs-toggle="modal" data-bs-target="#fModal"
                                 >
-                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px"}}>
+                                    <div className="d-flex flex-column align-items-center justify-content-center h-100 w-100" style={{gap:"2px",padding:"6px",color: DModeFlag ? "white" : "inherit"}}>
                                         <CompassRose degrees={weatherData.marine.current[6][1]} size={76} />
-                                        <span className="fw-bold" style={{fontSize:"0.85rem",lineHeight:1}}>{weatherData.marine.current[6][1]}°</span>
-                                        <small style={{fontSize:"0.72rem",color:"rgba(0,0,0,0.55)"}}>Swell Direction</small>
+                                        <span className="fw-bold" style={{fontSize:"1rem",lineHeight:1}}>{weatherData.marine.current[6][1]}°</span>
+                                        <small style={{fontSize:"0.72rem",color: DModeFlag ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)"}}>Swell Direction</small>
                                     </div>
                                 </button>
 
@@ -479,21 +471,6 @@ const AppInner = () => {
                                 />
                                 </>}
                             </div>
-                            <div className='modal' id="fModal">
-                                <div className="modal-dialog modal-lg modal-fullscreen-md-down">
-                                    <div className={DModeFlag ? 'modal-content bg-dark text-light' :'modal-content bg-light'}>
-                                        <div className={DModeFlag ? 'modal-header text-light' : 'modal-header text-dark'}>
-                                             {modalClick && <h2 className="modal-title fw-bold">{modalClick}</h2>}
-                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme={DModeFlag ? "dark": "light"}></button>
-                                        </div>
-                                        <div className={DModeFlag ? 'modal-body text-light' : 'modal-body text-dark'}>
-                                            {weatherData && geoData && 
-                                                <ForecastModal wData={weatherData} modalClick={modalClick} darkMode={DModeFlag}/>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </>
 
 
@@ -506,10 +483,12 @@ const AppInner = () => {
                             const level = result.level;
                             const reason = result.reasons.join(", ");
 
-                            const colours  = ['rgba(186,250,255,1)', 'rgba(204,255,186,1)', 'rgba(255,241,183,1)', 'rgba(255,185,164,1)'];
+                            const lightColours = ['rgba(186,250,255,1)', 'rgba(204,255,186,1)', 'rgba(255,241,183,1)', 'rgba(255,185,164,1)'];
+                            const darkColours  = ['rgb(50,90,110)', 'rgb(50,90,60)', 'rgb(100,80,30)', 'rgb(110,40,30)'];
+                            const colours = DModeFlag ? darkColours : lightColours;
                             const messages = ['Set your vessel details in Settings for a sailing recommendation.', '✅ Good sailing conditions', '⚠️ Challenging, sail with care', '❗ Dangerous,  not recommended'];
                             return (
-                                <div style={{backgroundColor: colours[level], marginTop: '100px'}} className="p-3 rounded-4 shadow-sm text-center">
+                                <div style={{backgroundColor: colours[level], marginTop: '100px', color: DModeFlag ? 'white' : 'inherit'}} className="p-3 rounded-4 shadow-sm text-center">
                                     <h5>{messages[level]}</h5>
                                     {reason && <p className="mb-0">Due to: {reason}</p>}
                                 </div>
@@ -550,6 +529,30 @@ const AppInner = () => {
                 </div>
             </div>
             
+        </div>
+        {/*
+          Modal is intentionally placed OUTSIDE the main container-fluid div.
+          That div has backdropFilter:"blur(1px)" which creates a CSS stacking context.
+          Any position:fixed element (like a modal) is trapped inside that context, while
+          Bootstrap appends the .modal-backdrop to <body> which is outside it — so the
+          backdrop ends up rendered ON TOP of the modal, blocking all clicks.
+          Keeping the modal here at the root fragment level fixes the z-index ordering.
+          tabIndex="-1" is required by Bootstrap 5 for keyboard focus-trapping to work.
+        */}
+        <div className='modal' id="fModal" tabIndex="-1">
+            <div className="modal-dialog modal-lg modal-fullscreen-md-down">
+                <div className={DModeFlag ? 'modal-content bg-dark text-light' : 'modal-content bg-light'}>
+                    <div className={DModeFlag ? 'modal-header text-light' : 'modal-header text-dark'}>
+                        {modalClick && <h2 className="modal-title fw-bold">{modalClick}</h2>}
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-theme={DModeFlag ? "dark" : "light"}></button>
+                    </div>
+                    <div className={DModeFlag ? 'modal-body text-light' : 'modal-body text-dark'}>
+                        {weatherData && geoData &&
+                            <ForecastModal wData={weatherData} modalClick={modalClick} darkMode={DModeFlag}/>
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
         <div>
             <nav className={DModeFlag ? "navbar fixed-bottom bg-dark justify-content-center" : "navbar fixed-bottom bg-light justify-content-center"}>
